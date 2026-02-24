@@ -1,0 +1,6 @@
+{
+  "role": "player",
+  "life_chip": 0,
+  "max_life_chip": 3,
+  "device_name": "player_01"
+}
