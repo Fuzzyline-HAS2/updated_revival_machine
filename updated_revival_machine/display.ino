@@ -1,4 +1,4 @@
-#include "revival_machine.h"
+#include "updated_revival_machine.h"
 
 /**
  * @brief 디스플레이에 변화를 주거나 변화가 있을시 실행

@@ -4,23 +4,17 @@
 #include "library_and_pin.h"
 
 //============================ Global Variable ============================
-typedef enum MACHINE_STATE
-{
-    revival,
-    board
-} MACHINE_STATE;                       // 생명장치의 상태를 저장하긴 위한 열거형
-MACHINE_STATE machine_state = revival; // 생명장치 사용인지, 현황판 사용인지 구분하는 변수
+typedef enum MACHINE_STATE {
+  revival,
+  board
+} MACHINE_STATE; // 생명장치의 상태를 저장하긴 위한 열거형
+MACHINE_STATE machine_state =
+    revival; // 생명장치 사용인지, 현황판 사용인지 구분하는 변수
 int tag_num;
 bool login_complete;
 String cur_tag_user;
 
-typedef enum GameState
-{
-    setting,
-    ready,
-    ready_activate,
-    activate
-} GameState;
+typedef enum GameState { setting, ready, ready_activate, activate } GameState;
 GameState game_state = setting;
 
 //============================ Hardware Serial ============================
@@ -28,7 +22,8 @@ GameState game_state = setting;
 HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
-HAS2_Wifi has2wifi;
+// 와이파이를 꼭 이렇게 설정해야 본사 서버랑 통신 가능!!!!
+HAS2_Wifi has2wifi("http://172.30.1.43");
 
 void SettingFunc();
 void ReadyFunc();
@@ -93,9 +88,12 @@ bool send_nfc_err = false;
 #define NUMPIXELS_MID 16
 #define NUMPIXELS_BOT 8
 
-Adafruit_NeoPixel pixels_top(NUMPIXELS_TOP, NEOPIXEL_TOP_PIN, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel pixels_mid(NUMPIXELS_MID, NEOPIXEL_MID_PIN, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel pixels_bot(NUMPIXELS_BOT, NEOPIXEL_BOT_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_top(NUMPIXELS_TOP, NEOPIXEL_TOP_PIN,
+                             NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_mid(NUMPIXELS_MID, NEOPIXEL_MID_PIN,
+                             NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_bot(NUMPIXELS_BOT, NEOPIXEL_BOT_PIN,
+                             NEO_GRB + NEO_KHZ800);
 
 // Neopixel 색상정보
 int color_brightness = 20;
@@ -108,5 +106,10 @@ int purple[3] = {color_brightness, 0, color_brightness};
 int blue[3] = {0, 0, color_brightness};
 
 void NeopixelFail();
+void NeopixelSet(int color[3]); // 세 스트립 모두 동일 색으로 설정
+
+// QC — 모든 타입 정의 이후에 포함해야 GameState 등을 인식 가능
+#include "QC/QC_Engine.h"
+#include "QC/QC_Rules.h"
 
 #endif
