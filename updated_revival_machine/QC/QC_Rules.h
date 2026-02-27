@@ -143,6 +143,12 @@ public:
       return QCResult(); // PASS - no data to validate yet
     }
 
+    // device_type에 따라 허용 상태 분리
+    String deviceType = "";
+    if (my.containsKey("device_type")) {
+      deviceType = (const char *)my["device_type"];
+    }
+
     if (my.containsKey("game_state")) {
       String gState = (const char *)my["game_state"];
       bool gValid = (gState == "setting" || gState == "activate" ||
@@ -156,13 +162,21 @@ public:
 
     if (my.containsKey("device_state")) {
       String dState = (const char *)my["device_state"];
+
+      // 공통 상태 (itembox + revivalmachine 모두 허용)
       bool dValid =
           (dState == "setting" || dState == "activate" || dState == "ready" ||
            dState == "ready_activate" || dState == "used" ||
            dState == "player_win" || dState == "player_lose" || dState == "");
+
+      // revivalmachine 전용 상태
+      if (!dValid && deviceType == "revivalmachine") {
+        dValid = (dState == "self_revive");
+      }
+
       if (!dValid) {
         return QCResult(QCLevel::WARN, getId(), "device_state Value",
-                        "Known State", dState,
+                        "Known State [" + deviceType + "]", dState,
                         "Check Logic for invalid state assignment");
       }
     }
