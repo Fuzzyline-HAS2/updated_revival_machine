@@ -20,13 +20,16 @@
 // #define SERIAL1_RX_PIN 36
 // #define SERIAL1_TX_PIN 32
 
+// NEXTION PIN
 #define SERIAL2_RX_PIN 39
 #define SERIAL2_TX_PIN 33
 
+// NEOPIXEL PIN
 #define NEOPIXEL_TOP_PIN 25
 #define NEOPIXEL_MID_PIN 26
 #define NEOPIXEL_BOT_PIN 27
 
+// RFID PIN
 #define PN532_SCK                       (18)
 #define PN532_MISO                      (19)
 #define PN532_MOSI                      (23)
