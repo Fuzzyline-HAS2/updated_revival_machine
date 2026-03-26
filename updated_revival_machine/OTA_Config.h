@@ -6,8 +6,9 @@
 // ==========================================
 
 // 1. 와이파이 설정 (revival machine 네트워크와 동일하게 유지)
-const char *ssid = "badland_ruins";
-const char *password = "Code3824@";
+// HAS2_Wifi.h가 ssid/password를 전역 선언하므로 충돌 방지를 위해 ota_ 접두사 사용
+const char *ota_ssid = "badland_ruins";
+const char *ota_password = "Code3824@";
 
 // 2. 펌웨어 다운로드 주소
 // 펌웨어 파일(.bin)이 있는 GitHub raw 주소를 입력해주세요.
