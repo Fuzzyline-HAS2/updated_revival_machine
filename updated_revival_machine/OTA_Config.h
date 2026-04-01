@@ -12,13 +12,18 @@ const char *ota_password = "Code3824@";
 
 // 2. 펌웨어 다운로드 주소
 // 펌웨어 파일(.bin)이 있는 GitHub raw 주소를 입력해주세요.
-// 예시: "https://raw.githubusercontent.com/<유저명>/<레포명>/main/update.bin"
 const char *firmware_url = "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_revival_machine/main/update.bin";
 
 // 버전 정보 파일 URL (version.txt)
 const char *version_url = "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_revival_machine/main/version.txt";
 
-// 3. 현재 펌웨어 버전 (서버의 version.txt 숫자와 비교됨)
+// 서명 파일 URL (update.sig) - 32바이트 HMAC-SHA256 서명
+const char *signature_url = "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_revival_machine/main/update.sig";
+
+// 3. HMAC 서명 비밀키 (secrets.h에서 관리 — GitHub에 올라가지 않음)
+#include "secrets.h"
+
+// 4. 현재 펌웨어 버전 (서버의 version.txt 숫자와 비교됨)
 #define CURRENT_FIRMWARE_VERSION 1
 
 // ==========================================

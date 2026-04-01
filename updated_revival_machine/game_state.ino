@@ -73,6 +73,8 @@ void DataChange() {
     } else if ((String)(const char *)my["device_state"] == "player_lose") {
       game_state = setting;
       SendCmd("page lose");
+    } else if ((String)(const char *)my["device_state"] == "github") {
+      checkOTA();
     }
   }
 

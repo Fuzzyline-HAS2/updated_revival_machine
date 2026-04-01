@@ -20,7 +20,6 @@ void RevivalMachineInit() {
   nexInit(); // 디스플레이 세팅
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN,
                   SERIAL2_TX_PIN); // 디스플레이 세팅
-  initOTA(); // OTA 펌웨어 업데이트 체크 (WiFi 연결 포함, has2wifi보다 먼저 실행)
   has2wifi.Setup("badland_ruins", "Code3824@"); // 와이파이 세팅
   SensorInit(); // IoT Glove 사용 센서1, 모듈 세팅
   TimerInit();  // 타이머 세팅
