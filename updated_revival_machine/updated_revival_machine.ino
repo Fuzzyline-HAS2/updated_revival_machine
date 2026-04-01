@@ -47,11 +47,9 @@ void setup() {
   delay(1000);
   Serial.begin(115200);
   RevivalMachineInit();
+  Serial.println("OTA update 되지롱 >.<");
 }
 
-/**
- * @brief 아두이노 기본 문법 (전원이 켜져있는동안 Core1에서 계속 실행)
- */
 void loop() {
   TimerRun();
   QCEngine::getInstance()

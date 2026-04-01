@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"C:\\\\Users\\\\ok\\\\updated_revival_machine\" -name \"*.ino\" -o -name \"*.h\" 2>/dev/null | sort)",
+      "Bash(find \"C:\\\\Users\\\\ok\" -name \"*escapeMachine*\" -o -name \"*escape_machine*\" 2>/dev/null | grep -v \".git\")",
+      "Bash(find \"C:\\\\Users\\\\ok\" -name \"*.ino\" 2>/dev/null | grep -v \"Documents/Arduino/libraries\" | grep -v \".git\")",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\AppData\\\\Local\\\\Arduino15\" -name \"*.ino\" 2>/dev/null | grep -i \"escape\" | head -10)",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\AppData\\\\Local\\\\Temp\" -name \"*.ino\" 2>/dev/null | grep -i \"escape\\\\|revival\" | head -20)",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\AppData\\\\Roaming\\\\arduino-ide\" -name \"*.json\" 2>/dev/null | head -10)",
+      "Bash(find \"C:\\\\Users\\\\ok\" -name \"updated_escapeMachine*\" -o -name \"updated_escape_machine*\" 2>/dev/null | grep -v \".git\" | head -20)",
+      "Bash(find \"C:\\\\Users\\\\ok\" -type d -name \"*escape*\" 2>/dev/null | grep -v \".git\" | grep -v \"libraries\")",
+      "Bash(find \"C:\\\\Users\\\\ok\" -type d -name \"updated_*\" 2>/dev/null | grep -v \".git\" | grep -v \"libraries\" | grep -v \".gemini\")",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\AppData\\\\Local\\\\Temp\" -name \"*.ino\" 2>/dev/null | grep -i \"escape\" | head -10)",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\AppData\\\\Local\\\\Temp\" -maxdepth 2 -name \"*.bin\" 2>/dev/null | grep -v \"chocolatey\\\\|winget\\\\|scoop\" | head -10)",
+      "Bash(find \"C:\\\\Users\\\\ok\\\\Desktop\" -name \"*.ino\" 2>/dev/null | grep -v \".git\" | head -20)",
+      "Bash(find /c /d 2>/dev/null -name \"updated_escapeMachine*\" -o -name \"updated_escape_machine*\" 2>/dev/null | grep -v \".git\" | head -10)"
+    ]
+  }
+}

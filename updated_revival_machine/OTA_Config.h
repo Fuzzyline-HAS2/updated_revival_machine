@@ -24,7 +24,7 @@ const char *signature_url = "https://raw.githubusercontent.com/Fuzzyline-HAS2/up
 #include "secrets.h"
 
 // 4. 현재 펌웨어 버전 (서버의 version.txt 숫자와 비교됨)
-#define CURRENT_FIRMWARE_VERSION 1
+#define CURRENT_FIRMWARE_VERSION 2
 
 // ==========================================
 #endif
