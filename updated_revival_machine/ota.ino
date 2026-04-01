@@ -8,8 +8,8 @@
  * 4. 일치 시에만 플래싱 커밋 — 불일치 시 즉시 중단
  *
  * [사용 방법]
- * - setup() 또는 RevivalMachineInit() 초반에 initOTA() 호출
- * - 필요 시 언제든지 checkOTA() 호출로 수동 업데이트 트리거 가능
+ * - device_state = "github" 수신 시 checkOTA() 호출 (game_state.ino)
+ * - 로그는 Serial + TelnetStream 동시 출력 (TLOG 매크로)
  */
 
 #include <HTTPClient.h>
@@ -35,7 +35,7 @@ bool downloadSignature(uint8_t sig[32]) {
 
   int httpCode = http.GET();
   if (httpCode != HTTP_CODE_OK) {
-    Serial.printf("[OTA] 서명 다운로드 실패 (HTTP: %d)\n", httpCode);
+    TLOGF("[OTA] 서명 다운로드 실패 (HTTP: %d)\n", httpCode);
     http.end();
     client.stop();
     return false;
@@ -43,7 +43,7 @@ bool downloadSignature(uint8_t sig[32]) {
 
   int len = http.getSize();
   if (len != 32) {
-    Serial.printf("[OTA] 서명 크기 오류: %d bytes (32 bytes 필요)\n", len);
+    TLOGF("[OTA] 서명 크기 오류: %d bytes (32 bytes 필요)\n", len);
     http.end();
     client.stop();
     return false;
@@ -56,7 +56,7 @@ bool downloadSignature(uint8_t sig[32]) {
   delay(500);
 
   if (bytesRead != 32) {
-    Serial.printf("[OTA] 서명 읽기 불완전: %d bytes\n", bytesRead);
+    TLOGF("[OTA] 서명 읽기 불완전: %d bytes\n", bytesRead);
     return false;
   }
   return true;
@@ -71,7 +71,7 @@ bool verifySignature(const uint8_t computed[32], const uint8_t downloaded[32]) {
 
 // 서버의 버전 정보를 확인하는 함수
 int checkServerVersion() {
-  Serial.println("[OTA] 서버 버전 확인 중...");
+  TLOGLN("[OTA] 서버 버전 확인 중...");
 
   HTTPClient http;
   WiFiClientSecure client;
@@ -89,7 +89,7 @@ int checkServerVersion() {
     versionStr.trim();
     int serverVersion = versionStr.toInt();
 
-    Serial.printf("[OTA] 서버 버전: %d, 현재 버전: %d\n", serverVersion,
+    TLOGF("[OTA] 서버 버전: %d, 현재 버전: %d\n", serverVersion,
                   CURRENT_FIRMWARE_VERSION);
 
     http.end();
@@ -97,7 +97,7 @@ int checkServerVersion() {
     delay(500);
     return serverVersion;
   } else {
-    Serial.printf("[OTA] 버전 확인 실패 (HTTP 코드: %d)\n", httpCode);
+    TLOGF("[OTA] 버전 확인 실패 (HTTP 코드: %d)\n", httpCode);
     http.end();
     client.stop();
     delay(500);
@@ -110,22 +110,23 @@ void execOTA() {
   // URL 유효성 검사
   if (String(firmware_url).indexOf("http") < 0 ||
       String(firmware_url).indexOf("REPLACE") >= 0) {
-    Serial.println("[OTA] 오류: OTA_Config.h에서 firmware_url을 설정해주세요!");
+    TLOGLN("[OTA] 오류: OTA_Config.h에서 firmware_url을 설정해주세요!");
     return;
   }
 
   // [1단계] 서명 파일 다운로드 (32바이트)
   uint8_t downloaded_sig[32];
-  Serial.println("[OTA] 서명 파일 다운로드 중...");
+  TLOGLN("[OTA] 서명 파일 다운로드 중...");
   if (!downloadSignature(downloaded_sig)) {
-    Serial.println("[OTA] 서명 파일 다운로드 실패. 업데이트 중단");
+    TLOGLN("[OTA] 서명 파일 다운로드 실패. 업데이트 중단");
     return;
   }
-  Serial.println("[OTA] 서명 파일 다운로드 완료");
+  TLOGLN("[OTA] 서명 파일 다운로드 완료");
 
   // [2단계] 펌웨어 다운로드 준비
-  Serial.println("[OTA] 클라우드 OTA 업데이트를 시작합니다...");
-  Serial.println("[OTA] 대상 URL: " + String(firmware_url));
+  TLOGLN("[OTA] 클라우드 OTA 업데이트를 시작합니다...");
+  TLOG("[OTA] 대상 URL: ");
+  TLOGLN(String(firmware_url));
 
   HTTPClient http;
   WiFiClientSecure client;
@@ -140,11 +141,11 @@ void execOTA() {
 
   // [안전장치 1] HTTP 200 OK가 아니면 즉시 중단
   if (httpCode != HTTP_CODE_OK) {
-    Serial.printf("[OTA] 펌웨어 다운로드 실패 (HTTP 코드: %d)\n", httpCode);
+    TLOGF("[OTA] 펌웨어 다운로드 실패 (HTTP 코드: %d)\n", httpCode);
     if (httpCode > 0) {
-      Serial.printf("[OTA] 에러: %s\n", http.errorToString(httpCode).c_str());
+      TLOGF("[OTA] 에러: %s\n", http.errorToString(httpCode).c_str());
     } else {
-      Serial.println("[OTA] 연결 실패. 네트워크를 확인하세요.");
+      TLOGLN("[OTA] 연결 실패. 네트워크를 확인하세요.");
     }
     http.end();
     client.stop();
@@ -153,10 +154,10 @@ void execOTA() {
 
   // [안전장치 2] Content-Length 검증
   int contentLength = http.getSize();
-  Serial.printf("[OTA] 다운로드 크기: %d bytes\n", contentLength);
+  TLOGF("[OTA] 다운로드 크기: %d bytes\n", contentLength);
 
   if (contentLength <= 0 || contentLength > 2000000) {
-    Serial.println("[OTA] 오류: 잘못된 파일 크기");
+    TLOGLN("[OTA] 오류: 잘못된 파일 크기");
     http.end();
     client.stop();
     return;
@@ -164,13 +165,13 @@ void execOTA() {
 
   // [안전장치 3] Update 시작 가능 여부 확인
   if (!Update.begin(contentLength)) {
-    Serial.println("[OTA] OTA를 시작할 공간이 부족합니다.");
+    TLOGLN("[OTA] OTA를 시작할 공간이 부족합니다.");
     http.end();
     client.stop();
     return;
   }
 
-  Serial.println("[OTA] 업데이트 중... 잠시만 기다려주세요.");
+  TLOGLN("[OTA] 업데이트 중... 잠시만 기다려주세요.");
 
   // [3단계] 펌웨어 스트리밍 + HMAC-SHA256 동시 계산
   mbedtls_md_context_t hmac_ctx;
@@ -190,7 +191,7 @@ void execOTA() {
     unsigned long t = millis();
     while (stream->available() == 0) {
       if (millis() - t > 5000) {
-        Serial.println("[OTA] 스트림 타임아웃");
+        TLOGLN("[OTA] 스트림 타임아웃");
         streamError = true;
         break;
       }
@@ -205,7 +206,7 @@ void execOTA() {
     // OTA 파티션에 쓰기
     size_t w = Update.write(buf, bytesRead);
     if (w != (size_t)bytesRead) {
-      Serial.println("[OTA] OTA 쓰기 오류");
+      TLOGLN("[OTA] OTA 쓰기 오류");
       streamError = true;
       break;
     }
@@ -223,30 +224,30 @@ void execOTA() {
 
   // [안전장치 4] 완전히 다운로드되었는지 확인
   if (streamError || written != (size_t)contentLength) {
-    Serial.printf("[OTA] 다운로드 불완전: %d / %d bytes\n", written, contentLength);
+    TLOGF("[OTA] 다운로드 불완전: %d / %d bytes\n", written, contentLength);
     Update.abort();
     http.end();
     client.stop();
     return;
   }
 
-  Serial.printf("[OTA] %d bytes 다운로드 완료\n", written);
+  TLOGF("[OTA] %d bytes 다운로드 완료\n", written);
 
   // [안전장치 5] HMAC 서명 검증 — 위조 펌웨어 차단
-  Serial.println("[OTA] 서명 검증 중...");
+  TLOGLN("[OTA] 서명 검증 중...");
   if (!verifySignature(computed_sig, downloaded_sig)) {
-    Serial.println("[OTA] 서명 검증 실패! 펌웨어가 변조되었거나 서명이 잘못되었습니다.");
-    Serial.println("[OTA] 업데이트를 중단합니다.");
+    TLOGLN("[OTA] 서명 검증 실패! 펌웨어가 변조되었거나 서명이 잘못되었습니다.");
+    TLOGLN("[OTA] 업데이트를 중단합니다.");
     Update.abort();
     http.end();
     client.stop();
     return;
   }
-  Serial.println("[OTA] 서명 검증 완료! 펌웨어가 신뢰할 수 있습니다.");
+  TLOGLN("[OTA] 서명 검증 완료! 펌웨어가 신뢰할 수 있습니다.");
 
   // [안전장치 6] Update 종료 및 커밋 (서명 검증 통과 후에만)
   if (!Update.end(true)) {
-    Serial.printf("[OTA] 업데이트 실패: %d\n", Update.getError());
+    TLOGF("[OTA] 업데이트 실패: %d\n", Update.getError());
     Update.abort();
     http.end();
     client.stop();
@@ -255,13 +256,13 @@ void execOTA() {
 
   // [안전장치 7] 최종 확인
   if (!Update.isFinished()) {
-    Serial.println("[OTA] 업데이트가 완전히 종료되지 않았습니다.");
+    TLOGLN("[OTA] 업데이트가 완전히 종료되지 않았습니다.");
     http.end();
     client.stop();
     return;
   }
 
-  Serial.println("[OTA] OTA 완료! 3초 후 재부팅합니다...");
+  TLOGLN("[OTA] OTA 완료! 3초 후 재부팅합니다...");
   http.end();
   client.stop();
   delay(3000);
@@ -270,9 +271,9 @@ void execOTA() {
 }
 
 void initOTA() {
-  Serial.println("\n[OTA] 초기화 시작...");
-  Serial.print("[OTA] 와이파이 연결 중: ");
-  Serial.println(ota_ssid);
+  TLOGLN("\n[OTA] 초기화 시작...");
+  TLOG("[OTA] 와이파이 연결 중: ");
+  TLOGLN(ota_ssid);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ota_ssid, ota_password);
@@ -280,36 +281,36 @@ void initOTA() {
   int tries = 0;
   while (WiFi.status() != WL_CONNECTED && tries < 20) {
     delay(500);
-    Serial.print(".");
+    TLOG(".");
     tries++;
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("\n[OTA] 와이파이 연결 성공!");
-    Serial.print("[OTA] IP: ");
-    Serial.println(WiFi.localIP());
+    TLOGLN("\n[OTA] 와이파이 연결 성공!");
+    TLOG("[OTA] IP: ");
+    TLOGLN(WiFi.localIP());
 
     int serverVersion = checkServerVersion();
 
     if (serverVersion == -1) {
-      Serial.println("[OTA] 버전 확인 실패. OTA 스킵");
+      TLOGLN("[OTA] 버전 확인 실패. OTA 스킵");
     } else if (serverVersion != CURRENT_FIRMWARE_VERSION) {
-      Serial.printf("[OTA] 버전 불일치! (현재: v%d -> 서버: v%d)\n",
+      TLOGF("[OTA] 버전 불일치! (현재: v%d -> 서버: v%d)\n",
                     CURRENT_FIRMWARE_VERSION, serverVersion);
-      Serial.println("[OTA] 5초 후 펌웨어 다운로드를 시작합니다...");
+      TLOGLN("[OTA] 5초 후 펌웨어 다운로드를 시작합니다...");
       delay(5000);
       checkOTA();
     } else {
-      Serial.printf("[OTA] 최신 버전 (v%d). OTA 스킵\n",
+      TLOGF("[OTA] 최신 버전 (v%d). OTA 스킵\n",
                     CURRENT_FIRMWARE_VERSION);
     }
   } else {
-    Serial.println("\n[OTA] 와이파이 연결 실패! 3초 후 재부팅합니다...");
+    TLOGLN("\n[OTA] 와이파이 연결 실패! 3초 후 재부팅합니다...");
     delay(3000);
     ESP.restart();
   }
 
-  Serial.println("[OTA] 초기화 완료\n");
+  TLOGLN("[OTA] 초기화 완료\n");
 }
 
 // OTA 업데이트를 확인하고 실행하는 함수 (언제든지 호출 가능)

@@ -108,6 +108,11 @@ int blue[3] = {0, 0, color_brightness};
 void NeopixelFail();
 void NeopixelSet(int color[3]); // 세 스트립 모두 동일 색으로 설정
 
+// Serial + TelnetStream 동시 출력 매크로
+#define TLOG(...)   do { Serial.print(__VA_ARGS__);   TelnetStream.print(__VA_ARGS__);   } while(0)
+#define TLOGLN(...) do { Serial.println(__VA_ARGS__); TelnetStream.println(__VA_ARGS__); } while(0)
+#define TLOGF(...)  do { Serial.printf(__VA_ARGS__);  TelnetStream.printf(__VA_ARGS__);  } while(0)
+
 // QC — 모든 타입 정의 이후에 포함해야 GameState 등을 인식 가능
 #include "QC/QC_Engine.h"
 #include "QC/QC_Rules.h"

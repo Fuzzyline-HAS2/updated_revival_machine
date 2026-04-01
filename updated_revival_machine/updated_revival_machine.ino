@@ -21,6 +21,7 @@ void RevivalMachineInit() {
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN,
                   SERIAL2_TX_PIN); // 디스플레이 세팅
   has2wifi.Setup("badland_ruins", "Code3824@"); // 와이파이 세팅
+  TelnetStream.begin(23);                       // Telnet 원격 시리얼 (포트 23)
   SensorInit(); // IoT Glove 사용 센서1, 모듈 세팅
   TimerInit();  // 타이머 세팅
   DataChange();
@@ -50,6 +51,7 @@ void setup() {
 }
 
 void loop() {
+  TelnetStream.handle();
   TimerRun();
   QCEngine::getInstance()
       .tick(); // QC 규칙 실행 (fast: 매 루프 / slow: 2초마다)

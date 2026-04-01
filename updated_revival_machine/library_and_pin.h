@@ -14,6 +14,7 @@
 
 #include <SimpleTimer.h>
 #include <esp_task_wdt.h>
+#include <TelnetStream.h>
 
 
 // 핀 선언
