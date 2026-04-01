@@ -1,7 +1,5 @@
 updated_revival_machine/secrets.h
 updated_revival_machine/scripts/secrets.py
-build/
+updated_revival_machine/build/
 __pycache__/
 *.elf
-*.bin
-*.sig
