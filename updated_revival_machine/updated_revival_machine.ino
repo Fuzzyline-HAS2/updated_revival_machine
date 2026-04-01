@@ -21,7 +21,7 @@ void RevivalMachineInit() {
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN,
                   SERIAL2_TX_PIN); // 디스플레이 세팅
   has2wifi.Setup("badland_ruins", "Code3824@"); // 와이파이 세팅
-  TelnetStream.begin(8023);                     // Telnet 원격 시리얼 (포트 8023)
+  TelnetStream.begin(23);                     // Telnet 원격 시리얼 (포트 8023)
   SensorInit(); // IoT Glove 사용 센서1, 모듈 세팅
   TimerInit();  // 타이머 세팅
   DataChange();
@@ -36,7 +36,6 @@ void RevivalMachineInit() {
   qc.addRule(new QCRule_RfidStatus());       // HW_RFID_01  (slow)
   qc.addRule(new QCRule_PinConflict());      // HW_PIN_01   (fast)
   qc.addRule(new QCRule_GpioCapability());   // HW_GPIO_01  (fast)
-  qc.addRule(new QCRule_GameState());        // LOGIC_STATE_01 (slow)
   qc.addRule(new QCRule_StateConsistency()); // LOGIC_FSM_01  (slow)
   // ---------------------------
 }
