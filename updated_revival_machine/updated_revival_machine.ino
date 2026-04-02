@@ -47,6 +47,7 @@ void setup() {
   delay(1000);
   Serial.begin(115200);
   RevivalMachineInit();
+  Serial.println("업데이트된 OTA 기능 테스트");
 }
 
 void loop() {
