@@ -19,4 +19,9 @@ SecureOTA ota(
 );
 
 // device_state == "github" 수신 시 호출 (game_state.ino)
-void checkOTA() { ota.check(); }
+void checkOTA() {
+  ota.setOnSuccess([]() {
+    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
+  });
+  ota.check();
+}
