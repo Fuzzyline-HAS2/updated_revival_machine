@@ -8,7 +8,7 @@
 #include <SecureOTA.h>
 #include "secrets.h"  // HMAC_SECRET
 
-#define FIRMWARE_VER 3
+#define FIRMWARE_VER 4
 
 SecureOTA ota(
   "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_revival_machine/main/update.bin",
