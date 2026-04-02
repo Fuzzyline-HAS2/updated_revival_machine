@@ -17,7 +17,8 @@ SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 ARDUINO_DIR  = os.path.dirname(SCRIPT_DIR)
 BASE_DIR     = os.path.dirname(ARDUINO_DIR)
 
-CONFIG_FILE        = os.path.join(ARDUINO_DIR, "OTA_Config.h")
+SKETCH_FILE        = os.path.join(ARDUINO_DIR, "ota.ino")
+VERSION_MACRO      = "FIRMWARE_VER"
 OUTPUT_FILENAME    = "update.bin"
 SIGNATURE_FILENAME = "update.sig"
 # =======================================
@@ -32,25 +33,25 @@ except ImportError:
     sys.exit(1)
 
 def get_current_version():
-    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "r", encoding="utf-8") as f:
         content = f.read()
-    match = re.search(r'#define CURRENT_FIRMWARE_VERSION (\d+)', content)
+    match = re.search(rf'#define {VERSION_MACRO} (\d+)', content)
     if match:
         return int(match.group(1))
     return None
 
 def increment_version(current_ver):
     new_ver = current_ver + 1
-    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "r", encoding="utf-8") as f:
         content = f.read()
 
     new_content = re.sub(
-        r'#define CURRENT_FIRMWARE_VERSION \d+',
-        f'#define CURRENT_FIRMWARE_VERSION {new_ver}',
+        rf'#define {VERSION_MACRO} \d+',
+        f'#define {VERSION_MACRO} {new_ver}',
         content
     )
 
-    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "w", encoding="utf-8") as f:
         f.write(new_content)
     return new_ver
 
@@ -102,7 +103,7 @@ def main():
     # 1. 버전 확인 및 증가
     cur_ver = get_current_version()
     if cur_ver is None:
-        print(f"오류: {CONFIG_FILE}에서 버전을 찾을 수 없습니다.")
+        print(f"오류: {SKETCH_FILE}에서 {VERSION_MACRO}를 찾을 수 없습니다.")
         return
 
     print(f"현재 버전: {cur_ver}")
