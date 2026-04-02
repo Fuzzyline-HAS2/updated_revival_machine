@@ -25,7 +25,6 @@ void RevivalMachineInit() {
   SensorInit(); // IoT Glove 사용 센서1, 모듈 세팅
   TimerInit();  // 타이머 세팅
   DataChange();
-  Serial.println("OTA UPDATE 잘 되지롱 >.< ");
 
   // -------- QC Engine --------
   QCEngine &qc = QCEngine::getInstance();
