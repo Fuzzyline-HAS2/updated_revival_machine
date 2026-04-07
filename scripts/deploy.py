@@ -11,11 +11,10 @@ sys.stdout.reconfigure(encoding='utf-8')
 # ================= 설정 =================
 # 경로 구조:
 #   scripts/deploy.py  <- 현재 파일
-#   updated_revival_machine/  <- ARDUINO_DIR (스케치 폴더)
-#   updated_revival_machine/  <- BASE_DIR (저장소 루트, 한 단계 위)
+#   ./                 <- BASE_DIR = ARDUINO_DIR (저장소 루트 = 스케치 폴더)
 SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
-ARDUINO_DIR  = os.path.dirname(SCRIPT_DIR)
-BASE_DIR     = os.path.dirname(ARDUINO_DIR)
+BASE_DIR     = os.path.dirname(SCRIPT_DIR)
+ARDUINO_DIR  = BASE_DIR
 
 SKETCH_FILE        = os.path.join(ARDUINO_DIR, "ota.ino")
 VERSION_MACRO      = "FIRMWARE_VER"

@@ -1,5 +1,6 @@
-updated_revival_machine/secrets.h
-updated_revival_machine/scripts/secrets.py
-updated_revival_machine/build/
+secrets.h
+scripts/secrets.py
+build/
 __pycache__/
 *.elf
+ArduinoOutput/
