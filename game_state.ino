@@ -50,6 +50,12 @@ void DataChange() {
 
   String cmd;
 
+  // brightness를 먼저 적용해야 이후 NeopixelSet() 호출이 올바른 밝기를 사용함
+  if ((int)my["brightness"] != (int)cur["brightness"]) {
+    SetBrightness((int)my["brightness"]);
+    NeopixelSet(current_neopixel_color); // 현재 색을 새 밝기로 즉시 재적용
+  }
+
   if ((String)(const char *)my["game_state"] !=
       (String)(const char *)cur["game_state"]) {
     if ((String)(const char *)my["game_state"] == "setting") {

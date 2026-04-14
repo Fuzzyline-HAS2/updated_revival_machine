@@ -96,17 +96,23 @@ Adafruit_NeoPixel pixels_bot(NUMPIXELS_BOT, NEOPIXEL_BOT_PIN,
                              NEO_GRB + NEO_KHZ800);
 
 // Neopixel 색상정보
-int color_brightness = 20;
+#define DEFAULT_BRIGHTNESS 20   // 디폴트 밝기 (0-255 raw값)
 
-int white[3] = {color_brightness, color_brightness, color_brightness};
-int red[3] = {color_brightness, 0, 0};
-int yellow[3] = {color_brightness, color_brightness, 0};
-int green[3] = {0, color_brightness, 0};
-int purple[3] = {color_brightness, 0, color_brightness};
-int blue[3] = {0, 0, color_brightness};
+int color_brightness = DEFAULT_BRIGHTNESS;
+
+int white[3]  = {color_brightness, color_brightness, color_brightness};
+int red[3]    = {color_brightness, 0,                0               };
+int yellow[3] = {color_brightness, color_brightness, 0               };
+int green[3]  = {0,                color_brightness, 0               };
+int purple[3] = {color_brightness, 0,                color_brightness};
+int blue[3]   = {0,                0,                color_brightness};
+
+int* current_neopixel_color = white; // 현재 켜진 색상 추적용
 
 void NeopixelFail();
 void NeopixelSet(int color[3]); // 세 스트립 모두 동일 색으로 설정
+void ApplyBrightness(int raw);  // raw(0-255) 값으로 색상 배열 갱신
+void SetBrightness(int pct);    // 서버값(0-100) → raw(0-255) 변환 후 적용
 
 // Serial + TelnetStream 동시 출력 매크로
 #define TLOG(...)   do { Serial.print(__VA_ARGS__);   TelnetStream.print(__VA_ARGS__);   } while(0)
