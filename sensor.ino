@@ -58,17 +58,15 @@ void SensorInit() {
  * @brief RFID(=PN532) 세팅
  */
 void RfidInit() {
-RestartPn532:
-  nfc.begin(); // nfc 함수 시작
+  nfc.begin();
   if (!(nfc.getFirmwareVersion())) {
-    Serial.print("!!!RFID 연결실패!!!");
-    has2wifi.Send((String)(const char *)my["device_name"], "device_state",
-                  "PN532");
-    goto RestartPn532;
-  } else {
-    nfc.SAMConfig(); // configure board to read RFID tags
-    Serial.println("RFID 연결성공");
+    rfid_not_work = true;
+    TLOGLN("!!!RFID 연결실패 - 스킵!!!");
+    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "PN532");
+    return;
   }
+  nfc.SAMConfig();
+  TLOGLN("RFID 연결성공");
 }
 
 /**
