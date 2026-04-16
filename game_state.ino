@@ -34,7 +34,6 @@ void ActivateFunc() {
 
 void ActivateRunOnce() {
   game_state = activate;
-
   SendCmd("sleep=0");
   if ((int)my["life_chip"] > 0) {
     SendCmd("page login");
@@ -50,10 +49,10 @@ void DataChange() {
 
   String cmd;
 
-  // brightness를 먼저 적용해야 이후 NeopixelSet() 호출이 올바른 밝기를 사용함
+  // brightness가 변경된 경우에만 적용 및 픽셀 재설정
   if ((int)my["brightness"] != (int)cur["brightness"]) {
     SetBrightness((int)my["brightness"]);
-    NeopixelSet(current_neopixel_color); // 현재 색을 새 밝기로 즉시 재적용
+    NeopixelSet(current_neopixel_color);
   }
 
   if ((String)(const char *)my["game_state"] !=

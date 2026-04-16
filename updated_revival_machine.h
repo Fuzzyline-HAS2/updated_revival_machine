@@ -23,7 +23,7 @@ HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
 // 와이파이를 꼭 이렇게 설정해야 본사 서버랑 통신 가능!!!!
-HAS2_Wifi has2wifi("http://172.30.1.43");
+HAS2_Wifi has2wifi("http://172.30.1.44");
 
 void SettingFunc();
 void ReadyFunc();
@@ -96,7 +96,7 @@ Adafruit_NeoPixel pixels_bot(NUMPIXELS_BOT, NEOPIXEL_BOT_PIN,
                              NEO_GRB + NEO_KHZ800);
 
 // Neopixel 색상정보
-#define DEFAULT_BRIGHTNESS 20   // 디폴트 밝기 (0-255 raw값)
+#define DEFAULT_BRIGHTNESS 255  // 디폴트 밝기 (0-255 raw값) — 0 또는 100 초과 수신 시 사용
 
 int color_brightness = DEFAULT_BRIGHTNESS;
 
