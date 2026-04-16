@@ -22,7 +22,7 @@ GameState game_state = setting;
 HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
-// 와이파이를 꼭 이렇게 설정해야 본사 서버랑 통신 가능!!!!
+// 와이파이 주소 맞춰주기!!
 HAS2_Wifi has2wifi("http://172.30.1.44");
 
 void SettingFunc();
