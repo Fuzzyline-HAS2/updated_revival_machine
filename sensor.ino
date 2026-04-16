@@ -11,6 +11,11 @@ void NeopixelSet(int color[3]) {
   pixels_mid.show();
   pixels_bot.fill(c);
   pixels_bot.show();
+  // 데이터 수신 실패 픽셀 복구용 재전송
+  delay(10);
+  pixels_top.show();
+  pixels_mid.show();
+  pixels_bot.show();
 }
 
 /**
@@ -44,9 +49,9 @@ void SetBrightness(int pct) {
 
 void SensorInit() {
   // Neopixel Init
-  pixels_top.begin();
-  pixels_mid.begin();
-  pixels_bot.begin();
+  pixels_top.begin(); pixels_top.clear(); pixels_top.show();
+  pixels_mid.begin(); pixels_mid.clear(); pixels_mid.show();
+  pixels_bot.begin(); pixels_bot.clear(); pixels_bot.show();
 
   // RFID Init
   RfidInit();
