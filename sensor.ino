@@ -18,40 +18,28 @@ void NeopixelSet(int color[3]) {
   pixels_bot.show();
 }
 
-/**
- * @brief raw 밝기(0-255)로 모든 색상 배열과 color_brightness 갱신
- */
-void ApplyBrightness(int raw) {
-  color_brightness = raw;
-  white[0]  = raw; white[1]  = raw; white[2]  = raw;
-  red[0]    = raw; red[1]    = 0;   red[2]    = 0;
-  yellow[0] = raw; yellow[1] = raw; yellow[2] = 0;
-  green[0]  = 0;   green[1]  = raw; green[2]  = 0;
-  purple[0] = raw; purple[1] = 0;   purple[2] = raw;
-  blue[0]   = 0;   blue[1]   = 0;   blue[2]   = raw;
-}
-
-/**
- * @brief 서버에서 받은 밝기값(0-100)을 적용
- *        0이거나 100 초과이면 DEFAULT_BRIGHTNESS로 복원
- *        1-100 → map → 1-255 로 변환
- */
-void SetBrightness(int pct) {
-  int raw;
-  if (pct <= 0 || pct > 100) {
-    raw = DEFAULT_BRIGHTNESS;
+void UpdateBrightness() {
+  int serverBrightness = my["brightness"].as<int>();
+  if (serverBrightness <= 0 || serverBrightness > 100) {
+    ledBrightness = DEFAULT_BRIGHTNESS;
   } else {
-    raw = map(pct, 1, 100, 1, 255);
+    ledBrightness = map(serverBrightness, 1, 100, 1, 255);
   }
-  TLOGF("[Brightness] pct=%d → raw=%d\n", pct, raw);
-  ApplyBrightness(raw);
+  pixels_top.setBrightness(ledBrightness);
+  pixels_mid.setBrightness(ledBrightness);
+  pixels_bot.setBrightness(ledBrightness);
+  NeopixelSet(current_neopixel_color);
 }
 
 void SensorInit() {
   // Neopixel Init
-  pixels_top.begin(); pixels_top.clear(); pixels_top.show();
-  pixels_mid.begin(); pixels_mid.clear(); pixels_mid.show();
-  pixels_bot.begin(); pixels_bot.clear(); pixels_bot.show();
+  pixels_top.begin();
+  pixels_mid.begin();
+  pixels_bot.begin();
+  pixels_top.setBrightness(ledBrightness);
+  pixels_mid.setBrightness(ledBrightness);
+  pixels_bot.setBrightness(ledBrightness);
+  NeopixelSet(white);
 
   // RFID Init
   RfidInit();

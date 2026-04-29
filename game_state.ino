@@ -49,11 +49,8 @@ void DataChange() {
 
   String cmd;
 
-  // brightness가 변경된 경우에만 적용 및 픽셀 재설정
-  if ((int)my["brightness"] != (int)cur["brightness"]) {
-    SetBrightness((int)my["brightness"]);
-    NeopixelSet(current_neopixel_color);
-  }
+  if (my["brightness"].as<int>() != cur["brightness"].as<int>())
+    UpdateBrightness();
 
   if ((String)(const char *)my["game_state"] !=
       (String)(const char *)cur["game_state"]) {
