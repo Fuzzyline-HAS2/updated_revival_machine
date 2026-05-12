@@ -14,7 +14,7 @@
 
 #include <SimpleTimer.h>
 #include <esp_task_wdt.h>
-#include <TelnetStream.h>
+#include <WiFi.h>
 
 
 // 핀 선언

@@ -3,6 +3,22 @@
 
 #include "library_and_pin.h"
 
+class TelnetDebugConsole : public Stream {
+public:
+  void begin(unsigned long baud);
+  int available() override;
+  int read() override;
+  int peek() override;
+  void flush() override;
+  size_t write(uint8_t data) override;
+  size_t write(const uint8_t *buffer, size_t size) override;
+};
+
+extern HardwareSerial HardwareDebugSerial;
+extern TelnetDebugConsole DebugSerial;
+
+#define Serial DebugSerial
+
 //============================ Global Variable ============================
 typedef enum MACHINE_STATE {
   revival,
@@ -23,7 +39,7 @@ HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
 // 와이파이 주소 맞춰주기!!
-HAS2_Wifi has2wifi("http://172.30.1.44");
+HAS2_Wifi has2wifi("http://172.30.1.43");
 
 void SettingFunc();
 void ReadyFunc();
@@ -113,10 +129,9 @@ void NeopixelFail();
 void NeopixelSet(int color[3]);
 void UpdateBrightness();
 
-// Serial + TelnetStream 동시 출력 매크로
-#define TLOG(...)   do { Serial.print(__VA_ARGS__);   TelnetStream.print(__VA_ARGS__);   } while(0)
-#define TLOGLN(...) do { Serial.println(__VA_ARGS__); TelnetStream.println(__VA_ARGS__); } while(0)
-#define TLOGF(...)  do { Serial.printf(__VA_ARGS__);  TelnetStream.printf(__VA_ARGS__);  } while(0)
+#define TLOG(...)   Serial.print(__VA_ARGS__)
+#define TLOGLN(...) Serial.println(__VA_ARGS__)
+#define TLOGF(...)  Serial.printf(__VA_ARGS__)
 
 // QC — 모든 타입 정의 이후에 포함해야 GameState 등을 인식 가능
 #include "QC/QC_Engine.h"
