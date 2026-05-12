@@ -133,6 +133,9 @@ void UpdateBrightness();
 #define TLOGLN(...) Serial.println(__VA_ARGS__)
 #define TLOGF(...)  Serial.printf(__VA_ARGS__)
 
+void OtaInit();
+void checkOTA();
+
 // QC — 모든 타입 정의 이후에 포함해야 GameState 등을 인식 가능
 #include "QC/QC_Engine.h"
 #include "QC/QC_Rules.h"

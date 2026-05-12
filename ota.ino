@@ -8,7 +8,7 @@
 #include <SecureOTA.h>
 #include "secrets.h"  // HMAC_SECRET
 
-#define FIRMWARE_VER 14
+#define FIRMWARE_VER 15
 
 SecureOTA ota(
   "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_revival_machine/main/update.bin",
@@ -18,12 +18,17 @@ SecureOTA ota(
   FIRMWARE_VER
 );
 
+void OtaInit() {
+  ota.setLogStream(DebugSerial);
+  ota.setOnSuccess([]() {
+    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
+  });
+  ota.setOnSkip([]() {
+    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
+  });
+}
+
 // device_state == "github" 수신 시 호출 (game_state.ino)
 void checkOTA() {
-  auto sendSetting = []() {
-    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
-  };
-  ota.setOnSuccess(sendSetting);
-  ota.setOnSkip(sendSetting);
   ota.check();
 }

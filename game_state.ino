@@ -47,6 +47,12 @@ void ActivateRunOnce() {
 void DataChange() {
   static StaticJsonDocument<1000> cur;
 
+  TLOGLN("[DC] game_state=" + (String)(const char*)my["game_state"] +
+         " device_state=" + (String)(const char*)my["device_state"] +
+         " life_chip=" + String(my["life_chip"].as<int>()) +
+         " cur_game=" + (String)(const char*)cur["game_state"] +
+         " cur_device=" + (String)(const char*)cur["device_state"]);
+
   String cmd;
 
   if (my["brightness"].as<int>() != cur["brightness"].as<int>())

@@ -22,6 +22,7 @@ void RevivalMachineInit() {
                   SERIAL2_TX_PIN); // 디스플레이 세팅
   has2wifi.Setup("badland_ruins"); // 와이파이 세팅
   TelnetInit();
+  OtaInit();
   SensorInit(); // IoT Glove 사용 센서1, 모듈 세팅
   TimerInit();  // 타이머 세팅
   DataChange();
