@@ -47,6 +47,9 @@ void ActivateRunOnce() {
 void DataChange() {
   static StaticJsonDocument<1000> cur;
 
+  String myJson;
+  serializeJson(my, myJson);
+  TLOGLN("[ReceiveMine] " + myJson);
   TLOGLN("[DC] game_state=" + (String)(const char*)my["game_state"] +
          " device_state=" + (String)(const char*)my["device_state"] +
          " life_chip=" + String(my["life_chip"].as<int>()) +
