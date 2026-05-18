@@ -1,4 +1,4 @@
-﻿#ifndef _REVIVAL_MACHINE_H_
+#ifndef _REVIVAL_MACHINE_H_
 #define _REVIVAL_MACHINE_H_
 
 #include "library_and_pin.h"
@@ -39,7 +39,7 @@ HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
 // 와이파이 주소 맞춰주기!!
-HAS2_Wifi has2wifi("http://172.30.1.1");
+HAS2_Wifi has2wifi("http://172.30.1.43");
 
 void SettingFunc();
 void ReadyFunc();
