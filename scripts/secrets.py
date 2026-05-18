@@ -1,1 +1,0 @@
-HMAC_SECRET = "Has3"
